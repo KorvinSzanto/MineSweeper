@@ -12,6 +12,7 @@
     height:57px;
 }
 .info { width:200px; }
+.time { text-align:center; }
 .score { text-align:center; font-size:50px; }
 .block:hover { opacity:.6; }
 .block { width:20px;height:20px;border:solid 1px black; text-align:center; background:#ffc; cursor:pointer; }
