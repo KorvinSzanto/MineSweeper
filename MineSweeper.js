@@ -6,20 +6,20 @@ function mineSweeper(w, h, m) {
 	for (var y = 0; ++y <= h;) {
 		tab += '<tr>';
 		for (var x = 0; ++x <= w;) {
-			tab += '<td class=\'x' + x + 'y' + y + ' block hide\'><div></div></td>';
+			tab += '<td id=\'x' + x + 'y' + y + '\' class=\'block hide\' title=\'n\'><div></div></td>';
 		}
 		tab += '</tr>';
 	}
 	$('.minefield').css({width: (w + 2) * 20,height: (h + 2) * 20}).append(tab).attr('cellpadding',0).attr('cellspacing',0);
-	$('.block').bind("contextmenu", function(e) {
+	$('.block','.minefield').bind("contextmenu", function(e) {
 		e.preventDefault();
 	});
-	$('.block').mouseup(function(e) {
-		$('.smiley').text(':)');
+	$('.block','.minefield').mouseup(function(e) {
+		$('.smiley','.minefield').text(':)');
 		switch (e.which) {
 		case 1:
 			var XY = getXY($(this));
-			if ($('.mine').length == 0) {
+			if ($('.mine','.block').length == 0) {
 				time = Math.round(new Date().getTime() / 1000);
 				timer = window.setInterval(function(){
 					var ntime = Math.round(new Date().getTime() / 1000);
@@ -28,12 +28,14 @@ function mineSweeper(w, h, m) {
 					seconds = seconds % 3600;
 					minutes = Math.floor(seconds / 60);
 					seconds = seconds % 60;
-					$('.time').text((hours < 10 ? '0'+hours : hours)+':'+(minutes < 10 ? '0'+minutes : minutes)+':'+(seconds < 10 ? '0'+seconds : seconds));
+					$('.time','.minefield').text((hours < 10 ? '0'+hours : hours)+':'+(minutes < 10 ? '0'+minutes : minutes)+':'+(seconds < 10 ? '0'+seconds : seconds));
 				},1000);
 				placeMines(w, h, m,XY[0], XY[1]);
-				$.each($('.block'), function() {
-					$(this).children('div').text((blockNumber($(this)) == 0 ? '' : blockNumber($(this))));
+				$.each($('.block','.minefield'),function(){
+					num = blockNumber($(this));
+					$(this).attr('title',num).children('div').text((num == 0 ? '' : num));
 				});
+						
 			}
 			if ($(this).hasClass('hide')) {
 				reveal($(this));
@@ -53,16 +55,16 @@ function mineSweeper(w, h, m) {
 		}
 		getScore();
 	}).mousedown(function(e) {
-		$('.smiley').text(':O');
+		$('.smiley','.minefield').text(':O');
 	});
-	$('.block').dblclick(function() {
+	$('.block','.minefield').dblclick(function() {
 		if (blockNumber($(this)) <= nearFlags($(this))) {
 			showBlocks($(this));
 		}
 		getScore();
 	});
 	
-	$('.block div').dblclick(function() {
+	$('div','.block').dblclick(function() {
 		if (blockNumber($(this).parent()) <= nearFlags($(this).parent())) {
 			showBlocks($(this).parent());
 		}
@@ -93,7 +95,7 @@ function mineSweeper(w, h, m) {
 	
 	function getXY(ob) {
 		if (typeof(ob) == 'object') {
-			var qy = ob.attr('class').split(' ')[0].split('y');
+			var qy = ob.attr('id').split(' ')[0].split('y');
 			var q = [];
 			q[0] = qy[0].split('x')[1];
 			q[1] = qy[1];
@@ -110,6 +112,7 @@ function mineSweeper(w, h, m) {
 	}
 	
 	function blockNumber(block) {
+		if (block.attr('title')!='n') { return block.attr('title'); }
 		var thex = getXY(block)[0];
 		var they = getXY(block)[1];
 		if (isMine(thex, they) === false) {
@@ -133,7 +136,7 @@ function mineSweeper(w, h, m) {
 	}
 	
 	function bl(X, Y) {
-		return $('.x' + X + 'y' + Y);
+		return $('#x' + X + 'y' + Y);
 	}
 	
 	function placeMines(w, h, m, x1, y1) {
@@ -190,34 +193,31 @@ function mineSweeper(w, h, m) {
 		}
 	}
 	function getScore() {
-		var flags = $('.flagged').length;
-		var mines = $('.mine').length;
-		var hidden = $('.hide').length;
-		var flaggedmines = $('.flagged.mine').length;
+		var flags = $('.flagged','.block').length;
+		var mines = $('.mine','.block').length;
+		var hidden = $('.hide','.block').length;
+		var flaggedmines = $('.flagged.mine','.block').length;
 		if (flaggedmines == mines && flags == mines) {
-			$('.flags').text(mines);
+			$('.flags','.minefield').text(mines);
 			winGame();
 		}
 		if (hidden == mines) {
-			$('.flags').text(mines);
+			$('.flags','.minefield').text(mines);
 			winGame();
 		}
-		$('.flags').text(flags);
-		$('.mines').text(mines);
+		$('.flags','.minefield').text(flags);
+		$('.mines','.minefield').text(mines);
 	}
 	function winGame() {
 		window.clearInterval(timer);
-		$('.smiley').txt('8)');
-		$('.mine').addClass('flagged');
-		$('.block').removeClass('hide');
-		$('.flags').text($('.mines').text());
+		$('.smiley','.minefield').txt('8)');
+		$('.mine','.block').addClass('flagged');
+		$('.block','.minefield').removeClass('hide');
+		$('.flags','.minefield').text($('.mines','.minefield').text());
 	}
 	function loseGame() {
 		window.clearInterval(timer);
-		$.each($('.block'), function() {
-			$(this).removeClass('hide');
-		});
-		$('.smiley').text(':\'(');
+		$('.block','.minefield').removeClass('hide');
+		$('.smiley','.minefield').text(':\'(');
 	}
-
 }
