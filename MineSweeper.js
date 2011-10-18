@@ -1,4 +1,4 @@
-function mineSweeper(w, h) {
+function mineSweeper(w, h, m) {
 	if (h < 9) {
 		h = 9;
 	}
@@ -36,7 +36,7 @@ function mineSweeper(w, h) {
 					seconds = seconds % 60;
 					$('.time').text((hours < 10 ? '0'+hours : hours)+':'+(minutes < 10 ? '0'+minutes : minutes)+':'+(seconds < 10 ? '0'+seconds : seconds));
 				},1000);
-				placeMines(16, 20, 50, XY[0], XY[1]);
+				placeMines(16, 20, m,XY[0], XY[1]);
 			}
 			if ($(this).hasClass('hide')) {
 				$.each($('.block'), function() {
