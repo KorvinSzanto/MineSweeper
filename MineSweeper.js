@@ -1,22 +1,16 @@
 function mineSweeper(w, h, m) {
-	if (h < 9) {
-		h = 9;
-	}
-	if (w < 9) {
-		w = 9;
-	}
-	var tab = '<tr><td class=\'score\' colspan=' + w + '><span class=\'info\'><span class=\'flags\'>0</span><span class=\'smiley\'>:|</span><span class=\'mines\'>0</span></span></td></tr><tr><td colspan=' + w + ' class=time>00:00:00</td></tr>';
+	h=(h<9?9:h);
+	w=(w<9?9:w);
+	m=(m>w*h - 1?w*h - 1:m);
+	var tab = '<tr><td class=\'score\' colspan=' + w + '><span class=\'info\'><span class=\'flags\'>0</span><span class=\'smiley\'>:|</span><span class=\'mines\'>'+m+'</span></span></td></tr><tr><td colspan=' + w + ' class=time>00:00:00</td></tr>';
 	for (var y = 0; ++y <= h;) {
 		tab += '<tr>';
 		for (var x = 0; ++x <= w;) {
-			tab += '<td class=\'x' + x + 'y' + y + ' block hide\'><span></span></td>';
+			tab += '<td class=\'x' + x + 'y' + y + ' block hide\'><div></div></td>';
 		}
 		tab += '</tr>';
 	}
-	$('.minefield').css({
-		width: (w + 2) * 20,
-		height: (h + 2) * 20
-	}).append(tab);
+	$('.minefield').css({width: (w + 2) * 20,height: (h + 2) * 20}).append(tab).attr('cellpadding',0).attr('cellspacing',0);
 	$('.block').bind("contextmenu", function(e) {
 		e.preventDefault();
 	});
@@ -36,12 +30,12 @@ function mineSweeper(w, h, m) {
 					seconds = seconds % 60;
 					$('.time').text((hours < 10 ? '0'+hours : hours)+':'+(minutes < 10 ? '0'+minutes : minutes)+':'+(seconds < 10 ? '0'+seconds : seconds));
 				},1000);
-				placeMines(16, 20, m,XY[0], XY[1]);
+				placeMines(w, h, m,XY[0], XY[1]);
+				$.each($('.block'), function() {
+					$(this).children('div').text((blockNumber($(this)) == 0 ? '' : blockNumber($(this))));
+				});
 			}
 			if ($(this).hasClass('hide')) {
-				$.each($('.block'), function() {
-					$(this).children('span').text((blockNumber($(this)) == 0 ? '' : blockNumber($(this))));
-				});
 				reveal($(this));
 			}
 			break;
@@ -68,7 +62,7 @@ function mineSweeper(w, h, m) {
 		getScore();
 	});
 	
-	$('.block span').dblclick(function() {
+	$('.block div').dblclick(function() {
 		if (blockNumber($(this).parent()) <= nearFlags($(this).parent())) {
 			showBlocks($(this).parent());
 		}
@@ -146,7 +140,7 @@ function mineSweeper(w, h, m) {
 		while ($('.mine').length < m) {
 			var xa = Math.round(Math.random() * w);
 			var ya = Math.round(Math.random() * h);
-			if (bl(xa, ya).hasClass('mine') == false && xa != x1 && ya != y1) {
+			if (bl(xa, ya).hasClass('mine') == false && xa+','+ya != x1+','+y1) {
 				bl(xa, ya).addClass('mine');
 			}
 		}
@@ -163,7 +157,7 @@ function mineSweeper(w, h, m) {
 			loseGame();
 		}
 		if (blockNumber(block) == '0') {
-			block.children('span').text('');
+			block.children('div').text('');
 			--they;
 			--thex;
 			var nearmines = 0;
