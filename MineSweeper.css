@@ -15,7 +15,7 @@
 .time { text-align:center; }
 .score { text-align:center; font-size:50px; }
 .block:hover { opacity:.6; }
-.block { width:20px;height:20px;border:solid 1px black; text-align:center; background:#ffc; cursor:pointer; }
+.block { width:20px;height:20px !important; font-size:10px; display:block; border:solid 1px black; text-align:center; background:#ffc; cursor:pointer; }
 .mine { background:red; }
 .hide { background:white; box-shadow:0 0 16px tan inset; }
 .hide span { display:none; }
