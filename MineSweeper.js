@@ -3,7 +3,7 @@ function mineSweeper(w, h, m) {
 	w=(w<9?9:w);
 	m=(m>w*h - 1?w*h - 1:m);
 	var tab = '<tr><td class=\'score\' colspan=' + w + '><span class=\'info\'><span class=\'flags\'>0</span><span class=\'smiley\'>:|</span><span class=\'mines\'>'+m+'</span></span></td></tr><tr><td colspan=' + w + ' class=time>00:00:00</td></tr>';
-	for (var y = 0; ++y <= h;) {
+	for (var y = 0; ++y <= h;) { 
 		tab += '<tr>';
 		for (var x = 0; ++x <= w;) {
 			tab += '<td id=\'x' + x + 'y' + y + '\' class=\'block hide\' title=\'n\'><div></div></td>';
