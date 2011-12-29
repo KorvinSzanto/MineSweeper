@@ -1,10 +1,11 @@
 jQuery MineSweeper
 ==================
 This was originally created to experiment with different methods of mine population, I wanted to find the best method for several scenarios:
-1. Easiest start
-2. Hardest start
-3. Most efficient start
-4. Most 'Artsy' start
+
+* Easiest start
+* Hardest start
+* Most efficient start
+* Most 'Artsy' start
 
 The function that handles population is `placeMines()`:
 
