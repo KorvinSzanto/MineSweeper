@@ -62,13 +62,7 @@
 				showBlocks($(this));
 			}
 			getScore();
-		});
-		$('div','.block').dblclick(function() {
-			if (blockNumber($(this).parent()) <= nearFlags($(this).parent())) {
-				showBlocks($(this).parent());
-			}
-			getScore();
-		});
+		}); 
 		nearFlags = function(block) {
 			var thex = getXY(block)[0];
 			var they = getXY(block)[1];
@@ -133,12 +127,12 @@
 			return $('#x' + X + 'y' + Y);
 		}
 		placeMines = function(w, h, m, x1, y1) {
-			while ($('.mine').length < m) {
-				var xa = Math.round(Math.random() * w);
-				var ya = Math.round(Math.random() * h);
-				if (bl(xa, ya).hasClass('mine') == false && xa+','+ya != x1+','+y1) {
-					bl(xa, ya).addClass('mine');
-				}
+			if ($('td.mine').length < m){
+				var mns = $("td.block:[id!=x"+x1+"y"+y1+"]");
+				mns = mns.sort(function(){ 
+					return Math.round(Math.random())-0.5
+				}).slice(0,m);
+				mns.addClass('mine');
 			}
 		}
 		reveal = function(block) {
